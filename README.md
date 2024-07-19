@@ -57,6 +57,7 @@ This application allows users to interact with spotify review data in 2023 throu
    ```
 
 2. Open your web browser and navigate to `http://localhost:8501` to access the app.
+3. Please put your OpenAI API key in the form, and the Pinecone Key I gave in the the email when submitting this task.
 
 ### Usage
 
