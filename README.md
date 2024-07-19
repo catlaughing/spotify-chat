@@ -2,21 +2,21 @@
 
 ## Overview
 
-This application allows users to interact with spotify review data in 2023 through a chat interface. Built using **LangChain**, **Streamlit** **Pinecone**, and **HugginFace** the app leverages advanced language models to provide insightful responses based on the user's queries. Users can ask for insight based on user review, and the app will enable them to receive answers derived from the data.
+Chatify App allows users to interact with Spotify review data from 2023 through a chat interface. Built using **LangChain**, **Streamlit**, **Pinecone**, and **HuggingFace**, the app leverages advanced language models to provide insightful responses to user queries. Users can ask for insights based on user reviews, and the app will generate answers derived from the data.
 
 ## Features
 
-- **Chat Interface**: A user-friendly chat interface built with Streamlit.
+- **Chat Interface**: User-friendly chat interface built with Streamlit.
 - **Natural Language Processing**: Utilizes LangChain to process user queries and generate responses.
-- **Vector Database**: Uses Pinecone to store and retrieve embeddings of the data for efficient querying.
+- **Vector Database**: Uses Pinecone to store and retrieve embeddings of the data efficiently.
 
 ## Technologies Used
 
-- **LangChain**: For building the language model and handling the logic of the chat.
+- **LangChain**: For building the language model and handling chat logic.
 - **Streamlit**: For creating the interactive web application.
 - **Pinecone**: For managing and querying vector embeddings of the data.
 - **OpenAI API**: For leveraging powerful language models to generate responses.
-- **Huggingface**: For leveraging the open source embedding model
+- **HuggingFace**: For using open-source embedding models.
 
 ## Getting Started
 
@@ -57,37 +57,39 @@ This application allows users to interact with spotify review data in 2023 throu
    ```
 
 2. Open your web browser and navigate to `http://localhost:8501` to access the app.
-3. Please put your OpenAI API key in the form, and the Pinecone Key I gave in the the email when submitting this task.
+3. Enter your OpenAI API key and the Pinecone API key provided via email.
 
 ### Usage
 
 1. **Ask Questions**: Type your questions in the chat interface. The app will process your query and return relevant answers based on the uploaded data.
 2. **Explore Responses**: Interact with the chat to explore different aspects of your data.
 
-
 ## Technical Details
 
 ### Data Preparation
-There are several data preparation process that we done for this app, listed below:
-1. In this app we make the decision to only use review data from January 2023 onwards, this is to make sure that review will still be relvant with our apps that mainly use in the market and also minimize the cost for storage and embedding computation. 
-2. After we filter it by date, we've also drop any empty or below than 1 word review as it just adding more rows without any insight.
-3. We use text splitter and set the max line size to 512, as most of the review in one sentence this would make sure that most of the review would be in one chunks, and after we inspect the review with  size more than that, it's usually is a review with paragraph and the user listed several reason of why they like/dislike for our apps, and split it into several chunks make sense as it'll improve on when we retrieve those review.
+
+Several data preparation steps were undertaken:
+
+1. **Date Filtering**: Only review data from January 2023 onwards is used to ensure relevance and minimize storage and embedding computation costs.
+2. **Review Filtering**: Empty reviews or those with fewer than one word are dropped to ensure meaningful content.
+3. **Text Splitting**: The text splitter is set to a maximum line size of 512. This ensures most one sentence reviews remain in one chunk, while longer reviews are splitted to make sure one chunks one sentence.
 
 ### Model
-- Embeddings: all-MiniLM-L6-v2
-- LLM:
-  - Answer Generation: gpt4o-mini
-  - Scoring: gpt4o
+
+- **Embeddings**: `all-MiniLM-L6-v2`
+- **LLM**:
+  - Answer Generation: `gpt4o-mini`
+  - Scoring: `gpt4o`
 
 ### RAG Chain Design
-![image](https://github.com/user-attachments/assets/becdd02c-74c4-4498-9919-b3e3c1e2a923)
 
+![RAG Chain Design](https://github.com/user-attachments/assets/becdd02c-74c4-4498-9919-b3e3c1e2a923)
 
-For our Chain Design it's actually a simple RAG with a twist in how we treat our question for retrieval, 
-1. First we use an LLM call to create a standalone question from user latest question and their chat history, to make sure our answer still relevant if user do another follow-up question.
-2. We use another LLM call to create 5 syntethic review that could likely answer that question, this help us a lot in our retrieval as we use a simple embedding model (not openAI Embedding Ada) and if we do semantic similairity between the question -> review directly e.g. "What can we fo to improve our apps" -> "this app is so bad, it not allow the user to do this" the similarity expected would be small as it has different intention. 
-So instead, we will do retrieval using 5 syntethic review.
-3. We add another call to better LLM (in this case gpt4-o) with input the user reviews retrieved and also the user raw question and ask it to score the answer based on theree criteria:
-    - Helpfullness: Whether the answer is helpful to user
-    - Harmfulness: Whether the answer contain any harmful behaviour or not abiding our guideline
-    - Hallucination: Whether the answer is not based on the review that are given.
+The chain design is a simple RAG with a unique approach to question retrieval:
+
+1. **Standalone Question Generation**: An LLM generates standalone questions from the user's latest question and chat history to maintain context relevance.
+2. **Synthetic Review Creation**: An LLM creates 5 synthetic reviews likely to answer the user question. This improves retrieval accuracy using a simple embedding model, by avoiding direct semantic similarity queries that might fail due to different intents.
+3. **Response Scoring**: A better LLM (`gpt4-o`) scores the retrieved answers based on:
+    - **Helpfulness**: Whether the answer is helpful to the user.
+    - **Harmfulness**: Whether the answer contains harmful content or violates guidelines.
+    - **Hallucination**: Whether the answer is based on the provided reviews.
