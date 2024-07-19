@@ -72,6 +72,12 @@ There are several data preparation process that we done for this app, listed bel
 2. After we filter it by date, we've also drop any empty or below than 1 word review as it just adding more rows without any insight.
 3. We use text splitter and set the max line size to 512, as most of the review in one sentence this would make sure that most of the review would be in one chunks, and after we inspect the review with  size more than that, it's usually is a review with paragraph and the user listed several reason of why they like/dislike for our apps, and split it into several chunks make sense as it'll improve on when we retrieve those review.
 
+### Model
+- Embeddings: all-MiniLM-L6-v2
+- LLM:
+  - Answer Generation: gpt4o-mini
+  - Scoring: gpt4o
+
 ### RAG Chain Design
 ![image](https://github.com/user-attachments/assets/becdd02c-74c4-4498-9919-b3e3c1e2a923)
 
