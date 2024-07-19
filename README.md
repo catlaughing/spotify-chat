@@ -73,7 +73,7 @@ There are several data preparation process that we done for this app, listed bel
 3. We use text splitter and set the max line size to 512, as most of the review in one sentence this would make sure that most of the review would be in one chunks, and after we inspect the review with  size more than that, it's usually is a review with paragraph and the user listed several reason of why they like/dislike for our apps, and split it into several chunks make sense as it'll improve on when we retrieve those review.
 
 ### RAG Chain Design
-![Flowchart or RAG Chain Design](.\chatify_rag.png")
+![image](https://github.com/user-attachments/assets/becdd02c-74c4-4498-9919-b3e3c1e2a923)
 
 
 For our Chain Design it's actually a simple RAG with a twist in how we treat our question for retrieval, 
